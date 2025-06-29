@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.hius74</groupId>
-    <artifactId>words</artifactId>
+    <artifactId>words-gemini-ai</artifactId>
     <version>0.0.1</version>
     <packaging>jar</packaging>
 
@@ -21,13 +21,6 @@
             <version>${picocli.version}</version>
         </dependency>
 
-        <!-- DB for store word cards -->
-        <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
-            <version>3.49.1.0</version>
-        </dependency>
-
         <!-- jUNIT tests -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -44,13 +37,12 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <showDeprecation>true</showDeprecation>
-                    <release>21</release>
                     <source>21</source>
                     <target>21</target>
                     <compilerArgs>
-                        <arg>-Xlint:all,-serial,-processing,-options,-path</arg>
+                        <compilerArg>--enable-preview</compilerArg>
                     </compilerArgs>
+                    <showDeprecation>true</showDeprecation>
                 </configuration>
                 <executions>
                     <execution>
@@ -84,7 +76,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.hius74.words.Main</mainClass>
+                            <mainClass>com.hius74.words.gemini.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
