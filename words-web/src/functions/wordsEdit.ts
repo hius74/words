@@ -1,0 +1,3 @@
+/**
+ * Edit word card.
+ */

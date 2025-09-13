@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Words</string>
+
+    <string name="menu_item_start">Start</string>
+    <string name="menu_item_repeat_old_words">Повторить</string>
+    <string name="menu_item_learn_new_words">Новые слова</string>
+    <string name="menu_item_import_new_words">Загрузить доп. слова</string>
+    <string name="menu_item_db">DB Operations</string>
+    <string name="menu_item_db_export">Export DB</string>
+    <string name="menu_item_db_import">Import DB</string>
+    <string name="menu_item_db_clear">Clean БД</string>
+
+    <!-- main_layout -->
+    <string name="roll_card_button">Перевернуть</string>
+    <string name="ok_card_button">OK</string>
+    <string name="error_card_button">Ошибка</string>
+    <string name="input_answer_hint">Введите текст ответа</string>
+</resources>

@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "noEmit": true,
+
+        "target": "ESNext",
+        "module": "NodeNext",
+        "moduleResolution": "nodenext",
+        "lib": ["ES2020", "DOM"],
+
+        // Stricter Typechecking Options
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+
+        // Recommended Options
+        "strict": true,
+        "isolatedModules": true,
+        "skipLibCheck": true,
+
+
+    }
+}
