@@ -6,10 +6,12 @@ public class Card {
 
     private static final String TAG = Card.class.getName();
 
+    public static final long DAY = 24 * 60 * 60 * 1000L;
+
     /**
      * Тип карты
      */
-    enum TYPE {
+    public enum TYPE {
         /**
          * Карточка для игнорирования, не заргужается в БД
          */
@@ -64,22 +66,17 @@ public class Card {
     /**
      * Текущий счетик повтора слов (служит для расчета времени следующего повтора).
      */
-    int count;
+    private final int count;
 
-    long nextCheckTime;
-
-    /**
-     * Общее число правильных ответов за все время
-     */
-    int totalOk;
+    private final long nextCheckTime;
 
     /**
-     * Общее число ошибочных ответов за все время
+     * Число ошибок за время урока
      */
-    int totalError;
+    transient int errors = 0;
 
     public Card(long rowId, TYPE type, String frontText, String backText, String frontSentence,
-                String backSentence, int count, long nextCheckTime, int totalOk, int totalError) {
+                String backSentence, int count, long nextCheckTime) {
         this.rowId = rowId;
         this.type = type;
         this.frontText = frontText;
@@ -88,7 +85,37 @@ public class Card {
         this.backSentence = backSentence;
         this.count = count;
         this.nextCheckTime = nextCheckTime;
-        this.totalOk = totalOk;
-        this.totalError = totalError;
+    }
+
+    public int getCount() {
+        return this.count;
+    }
+
+    public int checkErrorsAndGetCount() {
+        return switch(this.errors) {
+            case 0 -> this.count + 1;
+            case 1 -> this.count;
+            default -> Math.max(this.count - 1, 0);
+        };
+    }
+
+    /**
+     * Запрос ранее сохраненного в БД времени
+     */
+    public long getNextRepeatPeriod() {
+        return this.nextCheckTime;
+    }
+
+    /**
+     * Расчет даты следующего повртора карт.
+     */
+    public long getNextRepeatPeriod(long time) {
+        long delta = switch(this.errors) {
+            case 0 -> 2 * this.count * DAY; // Нет ошибок за урок, увеличиваем время повтора в 2 раза
+            case 1 -> DAY; // Одна ошибка, можно повторить завтра
+            default -> 0; // Много ошибок, позволяем повторить на следующем уроке
+        };
+        // Округляем до начала дня
+        return (time + delta) / DAY * DAY;
     }
 }

@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
     private static final String TAG = MainActivity.class.getName();
 
     /** Число карт для повторения за раз */
-    private static final int NUM_TOTAL_CARDS = 50;
+    private static final int NUM_TOTAL_CARDS = 1;
 
     /** Число новых карт для заучивания за раз */
     private static final int NUM_LEARN_CARDS = 10;
@@ -331,14 +331,7 @@ public class MainActivity extends Activity {
      */
     private void nextCard() {
         if (this.currentCardIdx >= this.cards.size()) {
-            // Окончание карточек
-            // Для отладки - проверяем что все счетчики правильные
-            for (Card c : this.cards) {
-                if (c.count <= 0) {
-                    Toast.makeText(this, "Ошибка в карте: " + card.frontText, Toast.LENGTH_SHORT).show();
-                }
-            }
-            // Сохраняем в БД обновленный статус числа повторов
+            // Окончание карточек. Сохраняем в БД обновленный статус числа повторов
             this.database.updateCards(this.cards);
             this.progressBar.setVisibility(View.GONE);
             this.frontCardText.setVisibility(View.GONE);
@@ -354,17 +347,11 @@ public class MainActivity extends Activity {
 
                 case ANSWER:
                 case ANSWER_EX:
-                    if (card.count < 0) {
-                        // Карта показывается первый раз (делаем как Simple)
-                        this.rollButton.setVisibility(View.VISIBLE);
-                    } else {
-                        // Последующие показы
-                        this.answerEdit.getText().clear();
-                        this.answerEdit.setVisibility(View.VISIBLE);
-                        this.answerEdit.requestFocus();
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.showSoftInput(this.answerEdit, InputMethodManager.SHOW_IMPLICIT);
-                    }
+                    this.answerEdit.getText().clear();
+                    this.answerEdit.setVisibility(View.VISIBLE);
+                    this.answerEdit.requestFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(this.answerEdit, InputMethodManager.SHOW_IMPLICIT);
                     break;
 
                 default:
@@ -391,19 +378,9 @@ public class MainActivity extends Activity {
     private void checkAnswer() {
         String answer = this.answerEdit.getText().toString();
         if (checkAnswerText(this.card.backText, answer)) {
-            // Ответ правильный
+            // Ответ правильный, Переходим к следующей карте
             this.answerEdit.setVisibility(View.GONE);
-            ++this.card.count;
-            ++this.card.totalOk;
-            // Если карта показывалась первый раз, то помещаем ее в конец
-            if (this.card.count <= 0) {
-                // Помещаем ее в конец
-                Card card = this.cards.remove(this.currentCardIdx);
-                this.cards.add(card);
-            } else {
-                // Переходим к следующей карте
-                ++this.currentCardIdx;
-            }
+            ++this.currentCardIdx;
             nextCard();
         } else {
             // Ответ не правильный, показываем ответ и предложение утвердить правильный ли ответ или нет
@@ -422,11 +399,7 @@ public class MainActivity extends Activity {
     private void processWrongAnswer() {
         this.backCardText.setVisibility(View.GONE);
         this.answerText.setVisibility(View.GONE);
-        // Уменьшаем счетчик
-        if (this.card.count >= 0) {
-            --this.card.count;
-        }
-        ++this.card.totalError;
+        ++this.card.errors;
         // и помещаем карту в конец
         Card card = this.cards.remove(this.currentCardIdx);
         this.cards.add(card);
@@ -481,16 +454,8 @@ public class MainActivity extends Activity {
         this.backCardText.setVisibility(View.GONE);
         this.okButton.setVisibility(View.GONE);
         this.errorButton.setVisibility(View.GONE);
-        ++this.card.count;
-        ++this.card.totalOk;
-        if (this.card.count <= 0) {
-            // Хоть и ответ правильный, но данная карта изучется в первый раз
-            Card card = this.cards.remove(this.currentCardIdx);
-            this.cards.add(card);
-        } else {
-            // Переходим к следующей карте (карта уже была ранее изучена)
-            ++this.currentCardIdx;
-        }
+        // Переходим к следующей карте (карта уже была ранее изучена)
+        ++this.currentCardIdx;
         nextCard();
     }
 
@@ -504,11 +469,7 @@ public class MainActivity extends Activity {
         this.backCardText.setVisibility(View.GONE);
         this.okButton.setVisibility(View.GONE);
         this.errorButton.setVisibility(View.GONE);
-        // уменьшаю счетчик счетчик правильных ответов
-        if (this.card.count >= 0) {
-            --this.card.count;
-        }
-        ++this.card.totalError;
+        ++this.card.errors;
         // и помещаем карту в конец
         Card card = this.cards.remove(this.currentCardIdx);
         this.cards.add(card);

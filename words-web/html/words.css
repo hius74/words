@@ -1,0 +1,22 @@
+html,
+body {
+    height: 100%;
+}
+
+.content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.cardsTable table,
+th,
+td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.cardsTable td {
+    text-align: center;
+}

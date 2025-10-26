@@ -16,6 +16,7 @@
         "isolatedModules": true,
         "skipLibCheck": true,
 
-
+        // Run node tests with TS files
+        "allowImportingTsExtensions": true,
     }
 }

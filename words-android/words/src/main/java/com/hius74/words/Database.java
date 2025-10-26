@@ -35,40 +35,12 @@ public class Database {
     /** Тип карт по умолчанию при добавлении новых слов */
     private static final Card.TYPE DEFAULT_CARD_TYPE = Card.TYPE.ANSWER;
 
-    /** Основной период повтора */
-    private static final long REPEAT_PERIOD_MILLISECS = 3 * 60 * 60 * 1000;
-
-    /** Защитный период (чтобы повтроять в примерно такое же время */
-    private static final long SPARE_PERIOD_MILLISECS = 60 * 60 * 1000;
-
-    /**
-     * Расчет даты следующего повртора карт.
-     * Реальная длителность повотора рассчитвается как удвоение счетчка.
-     * Счетчик слов:
-     *    -1: новое слово, еще не начато его изучение
-     *     0: начато изучение карты, показан перевод слова
-     *     1: закончена парвая попытка ввода слова на голландском
-     *     2 и далее: последующеие успешные повторы
-     *
-     * @param count счетчк повторов слова (1 и более, так как неуспешные слована повторяются до тех
-     *             порр пока не выучу в рамках текущего урока
-     * @return время относительно текущего следующего повтора в миллисекундах.
-     */
-    private static long getNextRepeatPeriod(int count) {
-        // Длительность повтора ограничена максимальным периодом
-        if (count < 5) {
-            return REPEAT_PERIOD_MILLISECS - SPARE_PERIOD_MILLISECS;
-        } else {
-            return 2 * REPEAT_PERIOD_MILLISECS - SPARE_PERIOD_MILLISECS;
-        }
-    }
-
     /** Для новых карт, значение по умолчанию  */
     private static final int DEFAULT_COUNT_VALUE = -1;
 
     static class DBHelper extends SQLiteOpenHelper {
         // If you change the database schema, you must increment the database version.
-        private static final int DATABASE_VERSION = 3;
+        private static final int DATABASE_VERSION = 4;
         private static final String DATABASE_NAME = "cards.db";
 
         public DBHelper(Context context) {
@@ -104,6 +76,14 @@ public class Database {
                 String sql = "ALTER TABLE cards ADD COLUMN total_ok INTEGER DEFAULT 0";
                 db.execSQL(sql);
                 sql = "ALTER TABLE cards ADD COLUMN total_error INTEGER DEFAULT 0";
+                db.execSQL(sql);
+                Log.i(TAG, "Upgrade complete");
+                upgrade = true;
+            }
+            if (oldVersion >= 3 && newVersion <= 4) {
+                String sql = "ALTER TABLE cards DROP COLUMN total_ok";
+                db.execSQL(sql);
+                sql = "ALTER TABLE cards DROP COLUMN total_error";
                 db.execSQL(sql);
                 Log.i(TAG, "Upgrade complete");
                 upgrade = true;
@@ -152,7 +132,7 @@ public class Database {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String sql = "SELECT rowid, card_type, front_text, back_text, front_sentence, back_sentence," +
-                " card_count, card_next_time_check, total_ok, total_error FROM cards" +
+                " card_count, card_next_time_check FROM cards" +
                 " WHERE card_next_time_check > 0 ORDER BY card_next_time_check LIMIT ?";
         try (Cursor cursor = db.rawQuery(sql, new String[] {Long.toString(numCards)})) {
             while (cursor.moveToNext()) {
@@ -168,7 +148,7 @@ public class Database {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String sql = "SELECT rowid, card_type, front_text, back_text, front_sentence, back_sentence," +
-                " card_count, card_next_time_check, total_ok, total_error FROM cards" +
+                " card_count, card_next_time_check FROM cards" +
                 " WHERE card_next_time_check <= 0 ORDER BY card_next_time_check DESC LIMIT ?";
         try (Cursor cursor = db.rawQuery(sql, new String[] {Long.toString(numCards)})) {
             while (cursor.moveToNext()) {
@@ -184,9 +164,7 @@ public class Database {
         Card card = new Card(cursor.getLong(0), Card.TYPE.values()[cursor.getInt(1)],
                 cursor.getString(2), cursor.getString(3),
                 cursor.getString(4), cursor.getString(5),
-                cursor.getInt(6), cursor.getLong(7),
-                cursor.getInt(8), cursor.getInt(9));
-
+                cursor.getInt(6), cursor.getLong(7));
         cards.add(card);
     }
 
@@ -226,18 +204,15 @@ public class Database {
 
     public void updateCards(List<Card> cards) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String sql = "UPDATE cards SET card_count = ?, card_next_time_check = ?, total_ok = ?," +
-                " total_error = ? WHERE rowid = ?";
+        String sql = "UPDATE cards SET card_count = ?, card_next_time_check = ? WHERE rowid = ?";
         SQLiteStatement stmt = db.compileStatement(sql);
         long time = System.currentTimeMillis();
         db.beginTransaction();
         try {
             for (Card card : cards) {
-                stmt.bindLong(1, card.count);
-                stmt.bindLong(2, time + getNextRepeatPeriod(card.count));
-                stmt.bindLong(3, card.totalOk);
-                stmt.bindLong(4, card.totalError);
-                stmt.bindLong(5, card.rowId);
+                stmt.bindLong(1, card.checkErrorsAndGetCount());
+                stmt.bindLong(2, card.getNextRepeatPeriod(time));
+                stmt.bindLong(3, card.rowId);
 
                 long res = stmt.executeInsert();
                 Log.v(TAG, "Update card: " + card.frontText + ", result: " + res);
@@ -259,7 +234,7 @@ public class Database {
         int count = 0;
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String sql = "INSERT INTO cards(card_type, front_text, back_text, front_sentence, back_sentence," +
-                " card_count, card_next_time_check, total_ok, total_error) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                " card_count, card_next_time_check) VALUES (?, ?, ?, ?, ?, ?, ?)";
         SQLiteStatement stmt = db.compileStatement(sql);
         db.beginTransaction();
         try {
@@ -269,10 +244,8 @@ public class Database {
                 stmt.bindString(3, card.backText);
                 stmt.bindString(4, card.frontSentence);
                 stmt.bindString(5, card.backSentence);
-                stmt.bindLong(6, card.count);
-                stmt.bindLong(7, card.nextCheckTime);
-                stmt.bindLong(8, card.totalOk);
-                stmt.bindLong(9, card.totalError);
+                stmt.bindLong(6, card.getCount());
+                stmt.bindLong(7, card.getNextRepeatPeriod());
 
                 try {
                     long res = stmt.executeInsert();
@@ -314,16 +287,15 @@ public class Database {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String sql = "SELECT card_type, front_text, back_text, front_sentence, back_sentence, card_count," +
-                " card_next_time_check, total_ok, total_error FROM cards";
+                " card_next_time_check FROM cards";
         try (Cursor cursor = db.rawQuery(sql, null)) {
             int count = 0;
             while (cursor.moveToNext()) {
-                String line = String.format(Locale.getDefault(), "%c|%s|%s|%s|%s|%d|%d|%d|%d%n",
+                String line = String.format(Locale.getDefault(), "%c|%s|%s|%s|%s|%d|%d%n",
                         Card.TYPE.values()[cursor.getInt(0)].name,
                         encodeText(cursor.getString(2)), encodeText(cursor.getString(1)),
                         encodeText(cursor.getString(4)), encodeText(cursor.getString(3)),
-                        cursor.getInt(5), cursor.getLong(6), cursor.getLong(7),
-                        cursor.getLong(8));
+                        cursor.getInt(5), cursor.getLong(6));
                 writer.write(line);
                 ++count;
             }
@@ -381,9 +353,7 @@ public class Database {
                         (ss.length > 4) && !ss[3].isEmpty() ? decodeText(ss[4]) : "",
                         (ss.length > 3) && !ss[4].isEmpty() ? decodeText(ss[3]) : "",
                         (ss.length > 5) && !ss[5].isEmpty() ? Integer.parseInt(ss[5]) : DEFAULT_COUNT_VALUE,
-                        (ss.length > 6) && !ss[6].isEmpty() ? Long.parseLong(ss[6]) : --time,
-                        (ss.length > 7) && !ss[7].isEmpty() ? Integer.parseInt(ss[7]) : 0,
-                        (ss.length > 8) && !ss[8].isEmpty() ? Integer.parseInt(ss[8]) : 0);
+                        (ss.length > 6) && !ss[6].isEmpty() ? Long.parseLong(ss[6]) : --time);
                 cards.add(card);
                 if (cards.size() >= numCards) {
                     count += insertCards(cards);

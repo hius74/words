@@ -1,10 +1,14 @@
 /**
  * Words application (repeat words).
  */
-import { DataStorage } from '../services/dataStorage.js';
+import { open } from '../services/dataStorage.js';
 
-const dataStorage = new DataStorage('XXX');
+let dataStorage: IDBDatabase;
 
-(document.getElementById("add") as HTMLButtonElement).onclick = () => {
-    alert(dataStorage.getDbName());
+(document.getElementById('add') as HTMLButtonElement).onclick = () => {
+
 };
+
+(async () => {
+    dataStorage = await open();
+})();
