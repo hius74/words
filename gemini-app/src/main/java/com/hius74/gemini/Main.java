@@ -7,7 +7,8 @@ import java.util.concurrent.Callable;
 @CommandLine.Command(mixinStandardHelpOptions = true,
         description = "Gemini applications",
         subcommands = {
-                CardApp.class,
+                GenaiApp.class,
+                ConsoleApp.class,
         }
 )
 public class Main implements Callable<Integer> {
@@ -18,7 +19,7 @@ public class Main implements Callable<Integer> {
         return 0;
     }
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         int exitCode = new CommandLine(new Main())
                 .setUseSimplifiedAtFiles(true) // Each line at *-files as param without quotes
                 .execute(args);

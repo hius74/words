@@ -1,0 +1,13 @@
+body {
+}
+
+div {
+    display: block;
+}
+
+#first-button {
+    color: red;
+}
+#second-button {
+    color: green;
+}

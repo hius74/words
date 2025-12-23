@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
     private static final String TAG = MainActivity.class.getName();
 
     /** Число карт для повторения за раз */
-    private static final int NUM_TOTAL_CARDS = 1;
+    private static final int NUM_TOTAL_CARDS = 50;
 
     /** Число новых карт для заучивания за раз */
     private static final int NUM_LEARN_CARDS = 10;

@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "noEmit": true,
+        "noEmit": false,
 
         "target": "ESNext",
         "module": "NodeNext",
@@ -16,7 +16,7 @@
         "isolatedModules": true,
         "skipLibCheck": true,
 
-        // Run node tests with TS files
-        "allowImportingTsExtensions": true,
-    }
+        "outDir": "public/scripts"
+    },
+    "include": ["src/**/*.ts"]
 }

@@ -1,16 +1,13 @@
 {
     "type": "module",
     "scripts": {
-        "build": "node --experimental-strip-types --no-warnings build.ts",
-        "typecheck": "tsc",
-        "format": "npx prettier . --write  --log-level error",
-        "lint": "npx tslint src/**/*.ts"
+        "build": "tsc",
+        "typecheck": "tsc --noEmit",
+        "format": "npx prettier . --write  --log-level error"
     },
     "devDependencies": {
-        "@types/node": "^24.5.2",
-        "@craftamap/esbuild-plugin-html": "^0.9.0",
-        "fake-indexeddb": "^6.2.2",
-        "prettier": "3.6.2",
-        "typescript": "^5.9.2"
+        "fake-indexeddb": "^6.2.5",
+        "prettier": "^3.6.2",
+        "typescript": "^5.9.3"
     }
 }
