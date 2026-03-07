@@ -1,0 +1,10 @@
+{
+  "name": "@words/gen-ai",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@google/genai": "^1.44.0"
+  }
+}
