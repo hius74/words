@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>words</title>
+  </head>
+  <body>
+    <div class="page">
+      <div class="layout">
+
+        <div class="form-wrapper">
+          <div class="toolbar">
+            <button type="button" id="editor_font_decrease" >Font-</button>
+            <button type="button" id="editor_font_increase" >Font+</button>
+            <button type="button" id="editor_upload">Upload</button>
+            <input type="file" id="editor_file_upload" hidden>
+            <button type="button" id="editor_save">Save</button>
+            <button type="button" id="editor_download">Download</button>
+          </div>
+
+          <textarea id="editor" placeholder="drop the file..."></textarea>
+        </div>
+
+        <div class="form-wrapper">
+
+          <div class="toolbar">
+            <button type="button" id="card_save">Save</button>
+            <button type="button" id="card_export">Export</button>
+            <button type="button" id="card_import">Import</button>
+          </div>
+
+          <form class="form-block" id="form">
+            <label>Word<input type="text" id="card_word"></label>
+            <label>Sentence<input type="text" id="card_sentence"></label>
+            <label>Description<input type="text" id="f3"></label>
+            <label>Translate<input type="text" id="f4"></label>
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+
+    <script type="module" src="src/pages/reader/main.ts"></script>
+  </body>
+</html>
