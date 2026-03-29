@@ -1,6 +1,8 @@
 import { GoogleGenAI } from "@google/genai";
 import { z } from "zod";
 import {readSettings} from "./settings.ts"
+import {fileURLToPath} from "url";
+import path from "path";
 
 const cardSchema = z.object({
     word: z.string().describe("Learning word"),
