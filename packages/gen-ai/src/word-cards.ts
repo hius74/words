@@ -1,8 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { z } from "zod";
-import {readSettings} from "./settings.ts"
-import {fileURLToPath} from "url";
-import path from "path";
+import {readSettings} from "./lib/settings.ts"
 
 const cardSchema = z.object({
     word: z.string().describe("Learning word"),
@@ -40,8 +38,8 @@ onto ungreased baking sheets and bake for 9 to 11 minutes.
         },
     });
 
-    const card = cardSchema.parse(JSON.parse(response.text));
-    console.log(card);
+    //const card = cardSchema.parse(JSON.parse(response.text));
+    //console.log(card);
 }
 
 await cards()

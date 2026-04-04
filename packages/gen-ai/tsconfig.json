@@ -1,15 +1,3 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-
-    "strict": true,
-    "noEmit": true,
-
-    "types": ["node"],
-    "verbatimModuleSyntax": true,
-    "skipLibCheck": true,
-    "allowImportingTsExtensions": true
-  }
+  "extends": "../../tsconfig.base.json"
 }

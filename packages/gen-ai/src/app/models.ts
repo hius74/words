@@ -1,7 +1,9 @@
 import { GoogleGenAI } from "@google/genai";
-import {readSettings} from "./settings.ts"
+import {readSettings} from "../lib/settings.ts"
 
-// Display available models
+/**
+ * Display available models
+ */
 async function models() {
     const settings = readSettings();
     const ai = new GoogleGenAI({
