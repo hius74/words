@@ -164,7 +164,7 @@ function setNewCard(cards: Map<string, Card>, verb: Verb) {
  * Load all cards, check if the learning ward is missing, send request and store result
  */
 async function verbs() {
-    const cardsFilename= `${getRootFolderPath()}cards.json`
+    const cardsFilename= `${getRootFolderPath()}cards.ndjson`
     const cards = await loadCards(cardsFilename);
 
     const verbs = await readVerbs(cards, `${getRootFolderPath()}verbs.txt`);
