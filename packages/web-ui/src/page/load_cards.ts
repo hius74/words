@@ -1,9 +1,7 @@
 import {getElementById} from "../util/dom.ts";
 import {readNDJSON} from "../util/stream-ndjson.ts";
 import {parseCard} from "@words/gen-ai/src/type/card.ts";
-import {Database} from "../util/database.ts";
-
-const database = new Database();
+import {dbReadBatch, dbSave} from "../util/database.ts";
 
 // Load card from server with fetch and store in DB
 /* getElementById<HTMLButtonElement>('load-cards', HTMLButtonElement)
@@ -51,7 +49,7 @@ async function saveCards(source: string | File) {
             total++;
             try {
                 const card = parseCard(obj);
-                if (await database.save(card)) {
+                if (await dbSave(card)) {
                     newCards++;
                 }
             } catch (err) {
@@ -75,7 +73,7 @@ async function downloadFile(writable: FileSystemWritableFileStream) {
     try {
         while (true) {
             const { records, lastKey: newLastKey } =
-                await database.readBatch(25, lastKey);
+                await dbReadBatch(25, lastKey);
 
             if (!records || records.length === 0) {
                 break;

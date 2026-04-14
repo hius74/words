@@ -1,7 +1,8 @@
 import * as esbuild from 'esbuild'
 
 await esbuild.build({
-    entryPoints: ['./src/page/load_cards.ts'],
+    entryPoints: ['./src/page/*.ts'],
     bundle: true,
     outdir: 'public',
+    format: 'esm',
 })
