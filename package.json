@@ -1,7 +1,7 @@
 {
   "private": true,
   "workspaces": [
-    "packages/gen-ai"
+    "packages/*"
   ],
   "type": "module",
   "engines": {
@@ -16,10 +16,10 @@
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.18",
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.4",
     "@eslint/js": "^10.0.1",
-    "eslint": "^10.1.0",
-    "typescript-eslint": "^8.57.2"
+    "eslint": "^10.2.0",
+    "typescript-eslint": "^8.58.1"
   }
 }

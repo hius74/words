@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Load new words into browser storage</title>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="icon" href="./favicon.svg" />
+    <link rel="canonical" href="." />
+</head>
+<body>
+    <script defer src="./load_cards.js"></script>
+    <main>
+        <section>
+            <h1>Load new words into browser storage</h1>
+            <input type="file" id="load-cards-file" accept=".ndjson,.jsonl,.txt" />
+        </section>
+        <section>
+            <h1>Export all records from browser storage</h1>
+            <button id="export-all">Export all</button>
+        </section>
+    </main>
+</body>
+</html>

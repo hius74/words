@@ -1,5 +1,6 @@
 /**
- * Return DOM element by Id with type checks
+ * Return DOM element by Id with type checks.
+ * Used as workaround until implement HTML parser and extract all elements by id base on HTML file and generate TS files with id
  */
 type ElementConstructor<T extends Element> = {
     new (...args: any[]): T;

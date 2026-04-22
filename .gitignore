@@ -2,3 +2,6 @@
 **/node_modules
 **/dist
 **/*settings.json
+
+**/*.js
+**/*.d.ts
