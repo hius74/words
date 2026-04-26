@@ -9,14 +9,22 @@
     <link rel="canonical" href="." />
 </head>
 <body>
-    <script defer src="./load_cards.js"></script>
+    <script src="./load_cards.js" type="module" defer></script>
+    <nav>
+        <a href="./learn_cards.html">Learn cards</a>
+    </nav>
     <main>
-        <section>
+        <header>
             <h1>Load new words into browser storage</h1>
+        </header>
+        <section class="content">
+            <h2>Load new words into browser storage</h2>
+            <label for="load-cards-file">Select file: </label>
             <input type="file" id="load-cards-file" accept=".ndjson,.jsonl,.txt" />
         </section>
-        <section>
-            <h1>Export all records from browser storage</h1>
+        <section class="content">
+            <h2>Export all records from browser storage</h2>
+            <label for="export-all">Download all cards from the storage</label>
             <button id="export-all">Export all</button>
         </section>
     </main>

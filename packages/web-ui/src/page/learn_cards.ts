@@ -9,6 +9,7 @@ let cardFaceIdx = 0;
 let errorAnswer = false;
 
 const progressElement = getElementById<HTMLProgressElement>('progress', HTMLProgressElement);
+progressElement.value = 0;
 progressElement.max = cards.length;
 
 const cardElement = getElementById<HTMLDivElement>('card', HTMLDivElement);
@@ -18,10 +19,10 @@ helpElement.addEventListener('click', () => {
     help();
 });
 
-const input = getElementById<HTMLInputElement>('answer', HTMLInputElement);
-input.addEventListener('keydown', async (event) => {
+const inputElement = getElementById<HTMLInputElement>('answer', HTMLInputElement);
+inputElement.addEventListener('keydown', async (event) => {
     if (event.key === "Enter") {
-        const value = input.value;
+        const value = inputElement.value;
         const card = cards[cardIdx];
         if (card.name === value) {
             if (!errorAnswer) {
@@ -33,7 +34,7 @@ input.addEventListener('keydown', async (event) => {
         } else {
             errorAnswer = true;
             // Show correct answer
-            input.value = card.name;
+            inputElement.value = card.name;
         }
     }
 });
@@ -42,12 +43,14 @@ input.addEventListener('keydown', async (event) => {
  * Help Button
  */
 function help() {
-    cardFaceIdx++;
-    const card = cards[cardIdx];
-    if (cardFaceIdx < card.sides.length - 1) {
-        cardElement.innerHTML = card.sides[cardFaceIdx];
-    } else {
-        helpElement.disabled = true;
+    if (cardIdx < cards.length) {
+        cardFaceIdx++;
+        const card = cards[cardIdx];
+        if (cardFaceIdx < card.sides.length - 1) {
+            cardElement.innerHTML = card.sides[cardFaceIdx];
+        } else {
+            helpElement.disabled = true;
+        }
     }
 }
 
@@ -62,7 +65,7 @@ function newCard() {
         cardFaceIdx = 0;
         cardElement.innerHTML = card.sides[cardFaceIdx];
         helpElement.disabled = cards[cardIdx].sides.length >= 2;
-        input.value = '';
+        inputElement.value = '';
         errorAnswer = false;
     } else {
         alert('Finished')
@@ -79,4 +82,10 @@ function calculateNextTime(card: Card) {
     }
 }
 
-newCard();
+if (cards.length > 0) {
+    newCard();
+} else {
+    cardElement.innerHTML = 'No card found to learn. Please <a href="./load_cards.html">load cards.</a>';
+    helpElement.disabled = true;
+    inputElement.disabled = true;
+}

@@ -1,0 +1,36 @@
+:root {
+    /* Формула: clamp(минимальный_размер, текущий_размер, максимальный_размер) */
+    --font-main: clamp(1rem, 0.8rem + 1vw, 1.5rem);
+}
+
+body {
+    font-size: var(--font-main);
+}
+
+input, button, textarea, select {
+    font: inherit;
+}
+
+section {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: center;
+}
+
+progress {
+    width: 100%;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+    padding: 10px;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 2rem;
+}
