@@ -5,4 +5,7 @@ await esbuild.build({
     bundle: true,
     outdir: 'public',
     format: 'esm',
+    define: {
+        VERSION: `"${new Date().toISOString()}"`,
+    }
 })

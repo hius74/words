@@ -1,17 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <title>Learn new words</title>
-    <meta name="viewport" content="width=device-width" />
-    <link rel="stylesheet" href="./style.css" />
-    <link rel="icon" href="./favicon.svg" />
-    <link rel="canonical" href="." />
+    <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">
+    <link rel="stylesheet" href="./index.css">
+    <link rel="icon" href="./favicon.svg">
+    <link rel="canonical" href=".">
+    <link rel="manifest" href="/manifest.json">
 </head>
 <body>
-<nav>
-    <a href="./learn_cards.html">Learn cards</a>
-    <a href="./learn_cards.html">Load cards</a>
-</nav>
+    <script src="./index.js" type="module" defer></script>
+    <nav class="navigation">
+        <a href="./settings.html">
+            Settings
+        </a>
+
+        <label for="progress"></label>
+        <progress id="progress"></progress>
+
+        <label for="help"></label>
+        <button id="help">Help</button>
+    </nav>
+    <main>
+        <section>
+            <div id="card" class="full-width">
+                Card content
+            </div>
+            <label for="answer"></label>
+            <input type="text" id="answer" class="full-width" autofocus lang="nl"
+                   autocapitalize="off"
+                   spellcheck="false"
+                   autocomplete="off" />
+        </section>
+    </main>
 </body>
 </html>

@@ -1,0 +1,15 @@
+{
+  "short_name": "Words",
+  "name": "Learn words",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "type": "image/svg"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#FFFFFF",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "description": "Interval repeating new words to learn."
+}

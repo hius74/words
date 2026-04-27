@@ -1,0 +1,65 @@
+:root {
+    /* Формула: clamp(минимальный_размер, текущий_размер, максимальный_размер) */
+    --font-main: clamp(1rem, 0.9rem + 1vw, 1.5rem);
+    /* support both color shema */
+    color-scheme: light dark;
+}
+
+:root {
+    --bg-color: #ffffff;
+    --text-color: #1a1a1a;
+    --accent-color: #007bff;
+}
+
+/* 2. Override for Dark Mode */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #121212;
+        --text-color: #f0f0f0;
+        --accent-color: #3391ff;
+    }
+}
+
+body {
+    font-size: var(--font-main);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 1rem;
+    margin: 0;
+}
+
+input, button, textarea, select {
+    font: inherit;
+}
+
+.navigation {
+    display: flex;
+    align-items: center;
+    gap: 0.1rem;
+}
+
+.navigation a:visited {
+    color: LinkText; /* Tells the browser to use its default unvisited link color */
+}
+
+#progress {
+    width: 100%;
+}
+
+
+.full-width {
+    width: 100%;
+    /* This ensures padding/border are included in the 100% width */
+    box-sizing: border-box;
+}
+
+#card p {
+    margin-top: 0;
+    margin-bottom: 0;
+    text-indent: 0;
+    text-align: justify;
+}
+
+#card p + p{
+    text-indent: 1.5em;
+}

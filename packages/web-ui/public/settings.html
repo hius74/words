@@ -4,14 +4,14 @@
     <meta charset="UTF-8" />
     <title>Load new words into browser storage</title>
     <meta name="viewport" content="width=device-width" />
-    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./settings.css" />
     <link rel="icon" href="./favicon.svg" />
     <link rel="canonical" href="." />
 </head>
 <body>
-    <script src="./load_cards.js" type="module" defer></script>
+    <script src="./settings.js" type="module" defer></script>
     <nav>
-        <a href="./learn_cards.html">Learn cards</a>
+        <a href="./index.html">Learn cards</a>
     </nav>
     <main>
         <header>
@@ -27,6 +27,14 @@
             <label for="export-all">Download all cards from the storage</label>
             <button id="export-all">Export all</button>
         </section>
+        <section class="content">
+            <h2>Clear cache and update app</h2>
+            <label for="update">clear cache</label>
+            <button id="update">Update</button>
+        </section>
     </main>
+    <footer>
+        <p>Build time: <span id="version"></span></p>
+    </footer>
 </body>
 </html>

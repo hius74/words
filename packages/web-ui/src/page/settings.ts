@@ -3,6 +3,8 @@ import {readNDJSON} from "../util/stream-ndjson.ts";
 import {parseCard} from "@words/gen-ai/src/type/card.ts";
 import {dbReadBatch, dbSave} from "../util/database.ts";
 
+declare const VERSION: string; // Defined in build.ts
+
 // Load card from server with fetch and store in DB
 /* getElementById<HTMLButtonElement>('load-cards', HTMLButtonElement)
     .addEventListener('click', async () => {
@@ -101,3 +103,20 @@ async function downloadFile(writable: FileSystemWritableFileStream) {
         throw err;
     }
 }
+
+getElementById<HTMLSpanElement>('version', HTMLSpanElement).innerHTML = VERSION;
+
+// Clear all caches
+getElementById<HTMLButtonElement>('update', HTMLButtonElement)
+    .addEventListener('click', () => {
+        if ('caches' in window) {
+            // Get all cache keys
+            caches.keys().then((names) => {
+                // Delete every cache found
+                return Promise.all(names.map(name => caches.delete(name)));
+            }).then(() => {
+                alert('Cache cleared! Reloading to update...');
+                window.location.reload(); // Reload to fetch fresh files
+            });
+        }
+});

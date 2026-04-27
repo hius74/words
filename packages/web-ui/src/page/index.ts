@@ -85,7 +85,16 @@ function calculateNextTime(card: Card) {
 if (cards.length > 0) {
     newCard();
 } else {
-    cardElement.innerHTML = 'No card found to learn. Please <a href="./load_cards.html">load cards.</a>';
+    cardElement.innerHTML = 'No card found to learn. Please <a href="./settings.html">load cards.</a>';
     helpElement.disabled = true;
     inputElement.disabled = true;
+}
+
+// Install service worker for the app
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then(reg => console.log('Service Worker Registered!'))
+            .catch(err => console.log('Registration failed:', err));
+    });
 }
