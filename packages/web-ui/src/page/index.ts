@@ -2,7 +2,7 @@ import {dbGetFirstCards, dbNextStage} from "../util/database.ts";
 import {getElementById} from "../util/dom.ts";
 import type {Card} from "@words/gen-ai/src/type/card.ts";
 
-const cards = await dbGetFirstCards(10);
+const cards = await dbGetFirstCards(30);
 
 let cardIdx = -1; // newCard function increment index
 let cardFaceIdx = 0;
@@ -25,11 +25,9 @@ inputElement.addEventListener('keydown', async (event) => {
         const value = inputElement.value;
         const card = cards[cardIdx];
         if (card.name === value) {
-            if (!errorAnswer) {
-                // Update time if answer was success from first time
-                const {level, nextTime} = calculateNextTime(card);
-                await dbNextStage(card.id, level, nextTime);
-            }
+            const {level, nextTime} = calculateNextTime(card, errorAnswer);
+            await dbNextStage(card.id, level, nextTime);
+
             newCard();
         } else {
             errorAnswer = true;
@@ -73,12 +71,16 @@ function newCard() {
 }
 
 /**
- * Calculate next time if the answer was success
+ * Calculate next time
+ * When error: + 1 hour
+ * when ok: start of next day
  */
-function calculateNextTime(card: Card) {
+const HOUR = 60 * 60 * 1000;
+const DAY = 24 * HOUR;
+function calculateNextTime(card: Card, errorAnswer: boolean) {
     return {
-        level: card.level + 1,
-        nextTime: card.nextTime + card.level * 3 * 60 * 60 * 1000,
+        level: errorAnswer ? card.level : card.level + 1,
+        nextTime: errorAnswer ? new Date().getTime() + HOUR : ((new Date().getTime()) / DAY + 1) * DAY
     }
 }
 
@@ -94,7 +96,7 @@ if (cards.length > 0) {
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/service-worker.js')
-            .then(reg => console.log('Service Worker Registered!'))
+            .then(() => console.log('Service Worker Registered!'))
             .catch(err => console.log('Registration failed:', err));
     });
 }
